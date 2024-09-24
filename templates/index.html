@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(180deg, rgba(57, 87, 138, 1) 0%, rgba(74, 144, 226, 1) 100%);
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .neumorphic-btn {
+            background: #e0e0e0;
+            border-radius: 30px;
+            box-shadow: 7px 7px 10px #c1c1c1, -7px -7px 10px #ffffff;
+            padding: 12px 24px;
+            transition: all 0.3s ease-in-out;
+        }
+        .neumorphic-btn:hover {
+            box-shadow: 5px 5px 8px #c1c1c1, -5px -5px 8px #ffffff;
+            transform: translateY(-3px);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+    <title>Weather App</title>
+</head>
+<body>
+
+    <div class="min-h-screen flex flex-col justify-center items-center">
+        <div class="glass p-6 w-full max-w-lg">
+            <h1 class="text-3xl text-white font-bold text-center mb-6">7-Day Weather Forecast</h1>
+            
+            <form method="POST" class="flex justify-center mb-4">
+                <input type="text" name="city" placeholder="Enter city name" class="p-2 rounded w-3/4" required>
+                <button type="submit" class="neumorphic-btn text-gray-600 font-semibold">Search</button>
+            </form>
+
+            {% if error_message %}
+                <div class="text-red-500 text-center">{{ error_message }}</div>
+            {% endif %}
+
+            {% if weather_data.daily %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for day in weather_data.daily %}
+                <div class="card">
+                    <h2 class="text-xl text-white font-semibold">{{ unix_to_datetime(day.dt) }}</h2>
+                    <img src="http://openweathermap.org/img/wn/{{ day.weather[0].icon }}@2x.png" alt="Weather Icon" class="mx-auto">
+                    <p class="text-white">Temperature: {{ day.temp.day }}°C</p>
+                    <p class="text-white">Humidity: {{ day.humidity }}%</p>
+                    <p class="text-white capitalize">Condition: {{ day.weather[0].description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
